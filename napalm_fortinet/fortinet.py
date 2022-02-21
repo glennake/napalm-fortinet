@@ -128,11 +128,11 @@ class FortinetDriver(NetworkDriver):
         vendor = "Fortinet"
         uptime = -1
         (serial_number, fqdn, os_version, hostname, model, interface_list) = (
-            "Unknown",
-            "Unknown",
-            "Unknown",
-            "Unknown",
-            "Unknown",
+            None,
+            None,
+            None,
+            None,
+            None,
             [],
         )
 
@@ -141,6 +141,7 @@ class FortinetDriver(NetworkDriver):
             "get system performance status | grep Uptime"
         )
         sys_dns_domain = self._send_command("get system dns | grep domain")
+        sys_intf_eqeq = self._send_command("get system interface | grep ==")
 
         uptime_formatted = (
             sys_perf_uptime.replace("Uptime:", "")
@@ -150,7 +151,7 @@ class FortinetDriver(NetworkDriver):
             .strip()
         )
         uptime_dict = dict(zip(("d", "h", "m"), uptime_formatted.split(":")))
-        uptime_seconds = (
+        uptime = (
             +int(uptime_dict["m"]) * 60
             + int(uptime_dict["h"]) * 60 * 60
             + int(uptime_dict["d"]) * 60 * 60 * 24
@@ -166,16 +167,19 @@ class FortinetDriver(NetworkDriver):
             if "Hostname: " in line:
                 hostname = line.split(" ")[1]
 
-        domain = sys_dns_domain.split(":")
+        domain = sys_dns_domain.strip().split(":")
         if len(domain) > 1 and domain[1]:
-            fqdn = hostname + "." + domain
+            fqdn = hostname + "." + domain[1].lstrip().strip().replace('"', "")
         else:
             fqdn = hostname
 
+        for line in sys_intf_eqeq.splitlines():
+            interface_list.append(line.lstrip("== [ ").strip(" ]"))
+
         facts = {
             "os_version": os_version,
-            "uptime": uptime_seconds,
-            "interface_list": [],
+            "uptime": uptime,
+            "interface_list": interface_list,
             "vendor": vendor,
             "serial_number": serial_number,
             "model": model,
