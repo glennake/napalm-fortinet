@@ -14,7 +14,7 @@
 # the License.
 
 """
-Napalm driver for Skeleton.
+Napalm driver for Fortinet.
 
 Read https://napalm.readthedocs.io for more information.
 """
@@ -29,8 +29,8 @@ from napalm.base.exceptions import (
 )
 
 
-class SkeletonDriver(NetworkDriver):
-    """Napalm driver for Skeleton."""
+class FortinetDriver(NetworkDriver):
+    """Napalm driver for Fortinet."""
 
     def __init__(self, hostname, username, password, timeout=60, optional_args=None):
         """Constructor."""
@@ -46,7 +46,6 @@ class SkeletonDriver(NetworkDriver):
     def open(self):
         """Implement the NAPALM method open (mandatory)"""
         pass
-
 
     def close(self):
         """Implement the NAPALM method close (mandatory)"""

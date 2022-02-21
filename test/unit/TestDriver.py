@@ -16,7 +16,7 @@
 
 import unittest
 
-from napalm_skeleton import skeleton
+from napalm_fortinet import fortinet
 from napalm.base.test.base import TestConfigNetworkDriver, TestGettersNetworkDriver
 import json
 
@@ -27,17 +27,20 @@ class TestConfigDriver(unittest.TestCase, TestConfigNetworkDriver):
     @classmethod
     def setUpClass(cls):
         """Run before starting the tests."""
-        hostname = '127.0.0.1'
-        username = 'vagrant'
-        password = 'vagrant'
-        cls.vendor = 'skeleton'
+        hostname = "127.0.0.1"
+        username = "vagrant"
+        password = "vagrant"
+        cls.vendor = "fortinet"
 
-        optional_args = {'port': 12443, }
-        cls.device = skeleton.SkeletonDriver(hostname, username, password, timeout=60,
-                                             optional_args=optional_args)
+        optional_args = {
+            "port": 12443,
+        }
+        cls.device = fortinet.FortinetDriver(
+            hostname, username, password, timeout=60, optional_args=optional_args
+        )
         cls.device.open()
 
-        cls.device.load_replace_candidate(filename='%s/initial.conf' % cls.vendor)
+        cls.device.load_replace_candidate(filename="%s/initial.conf" % cls.vendor)
         cls.device.commit_config()
 
 
@@ -49,14 +52,17 @@ class TestGetterDriver(unittest.TestCase, TestGettersNetworkDriver):
         """Run before starting the tests."""
         cls.mock = True
 
-        hostname = '127.0.0.1'
-        username = 'vagrant'
-        password = 'vagrant'
-        cls.vendor = 'skeleton'
+        hostname = "127.0.0.1"
+        username = "vagrant"
+        password = "vagrant"
+        cls.vendor = "fortinet"
 
-        optional_args = {'port': 12443, }
-        cls.device = skeleton.SkeletonDriver(hostname, username, password, timeout=60,
-                                             optional_args=optional_args)
+        optional_args = {
+            "port": 12443,
+        }
+        cls.device = fortinet.FortinetDriver(
+            hostname, username, password, timeout=60, optional_args=optional_args
+        )
 
         if cls.mock:
             cls.device.device = FakeDevice()

@@ -12,7 +12,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-"""napalm-skeleton package."""
-from napalm_skeleton.skeleton import SkeletonDriver  # noqa
+"""napalm-fortinet package."""
+from napalm_fortinet.fortinet import FortinetDriver  # noqa
 
-__all__ = ('SkeletonDriver',)
+__all__ = ("FortinetDriver",)
