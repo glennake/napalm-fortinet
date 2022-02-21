@@ -18,17 +18,17 @@ Napalm driver for Fortinet.
 
 Read https://napalm.readthedocs.io for more information.
 """
-# from __future__ import print_function
-# from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import socket
 
 from netmiko import ConnectHandler
 
-try:
-    from napalm.base.base import NetworkDriver
-except ImportError:
-    from napalm_base.base import NetworkDriver
+from napalm.base.base import NetworkDriver
 
 from napalm.base.exceptions import (
+    ConnectionClosedException,
     ConnectionException,
     SessionLockedException,
     MergeConfigException,
@@ -93,7 +93,46 @@ class FortinetDriver(NetworkDriver):
         """Close connection to the device."""
         self.device.disconnect()
 
+    def _send_command(self, command):
+        """Wrapper for self.device.send.command().
+        If command is a list will iterate through commands until valid command.
+        """
+        try:
+            if isinstance(command, list):
+                for cmd in command:
+                    output = self.device.send_command(cmd)
+                    if "Invalid input: " not in output:
+                        break
+            else:
+                output = self.device.send_command(command)
+            return output
+        except (socket.error, EOFError) as e:
+            raise ConnectionClosedException(str(e))
+
+    def is_alive(self):
+        """ Returns a flag with the state of the connection."""
+        if self.device is None:
+            return {"is_alive": False}
+        try:
+            # Try sending ASCII null byte to maintain the SSH connection alive
+            null = chr(0)
+            self.device.write_channel(null)
+            return {"is_alive": self.device.remote_conn.transport.is_active()}
+        except (socket.error, EOFError, OSError):
+            # If unable to send, we can tell for sure that the connection is unusable
+            return {"is_alive": False}
+
     def get_facts(self):
         """Get facts for the device."""
-        facts = {}
+        system_status = self._send_command("get system status")
+
+        facts = {
+            "vendor": "Fortinet",
+            "model": "",
+            "serial": "",
+            "sw_ver": "",
+            "hostname": "",
+            "ha_mode": "",
+        }
+
         return facts
