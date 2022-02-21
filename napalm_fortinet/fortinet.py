@@ -126,13 +126,22 @@ class FortinetDriver(NetworkDriver):
         """Get facts for the device."""
         system_status = self._send_command("get system status")
 
+        for line in system_status.splitlines():
+            if "Version: " in line:
+                line_val = line.split(": ")[1].strip().split(" ")[0].strip()
+                model = line_val[0].strip()
+                sw_ver = line_val.split(",")[0].strip().string.lstrip("v")
+
         facts = {
             "vendor": "Fortinet",
-            "model": "",
+            "model": model,
             "serial": "",
-            "sw_ver": "",
+            "sw_ver": sw_ver,
             "hostname": "",
             "ha_mode": "",
+            "vdom_mode": "",
+            "op_mode": "",
+            "branch_pt": "",
         }
 
         return facts
