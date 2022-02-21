@@ -152,7 +152,7 @@ class FortinetDriver(NetworkDriver):
         )
         uptime_dict = dict(zip(("d", "h", "m"), uptime_formatted.split(":")))
         uptime = (
-            +int(uptime_dict["m"]) * 60
+            int(uptime_dict["m"]) * 60
             + int(uptime_dict["h"]) * 60 * 60
             + int(uptime_dict["d"]) * 60 * 60 * 24
         )
