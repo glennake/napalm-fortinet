@@ -251,9 +251,7 @@ class FortinetDriver(NetworkDriver):
             intfs_ip[intf_name]["ipv6"][ipv6_addr] = {}
             intfs_ip[intf_name]["ipv6"][ipv6_addr]["prefix_length"] = ipv6_prefix
 
-        print(intfs_ip)
-
-        pass
+        return intfs_ip
 
     def get_ipv6_neighbors_table(self):
         """Get IPv6 neighbors for the device."""
