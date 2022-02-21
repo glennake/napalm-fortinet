@@ -109,18 +109,29 @@ class FortinetDriver(NetworkDriver):
         except (socket.error, EOFError) as e:
             raise ConnectionClosedException(str(e))
 
-    def is_alive(self):
-        """ Returns a flag with the state of the connection."""
-        if self.device is None:
-            return {"is_alive": False}
-        try:
-            # Try sending ASCII null byte to maintain the SSH connection alive
-            null = chr(0)
-            self.device.write_channel(null)
-            return {"is_alive": self.device.remote_conn.transport.is_active()}
-        except (socket.error, EOFError, OSError, AttributeError):
-            # If unable to send, we can tell for sure that the connection is unusable
-            return {"is_alive": False}
+    def get_arp_table(self):
+        """Get arp table for the device."""
+        pass
+
+    def get_bgp_config(self):
+        """Get bgp config for the device."""
+        pass
+
+    def get_bgp_neighbors(self):
+        """Get bgp neighbors for the device."""
+        pass
+
+    def get_bgp_neighbors_detail(self):
+        """Get bgp neighbors with details for the device."""
+        pass
+
+    def get_config(self):
+        """Get config for the device."""
+        pass
+
+    def get_environment(self):
+        """Get environmentals for the device."""
+        pass
 
     def get_facts(self):
         """Get facts for the device."""
@@ -188,3 +199,92 @@ class FortinetDriver(NetworkDriver):
         }
 
         return facts
+
+    def get_firewall_policies(self):
+        """Get firewall policies for the device."""
+        pass
+
+    def get_interfaces_counters(self):
+        """Get interface counters for the device."""
+        pass
+
+    def get_interfaces_ip(self):
+        """Get interface IP addresses for the device."""
+        pass
+
+    def get_ipv6_neighbors_table(self):
+        """Get IPv6 neighbors for the device."""
+        pass
+
+    def get_lldp_neighbors(self):
+        """Get LLDP neighbors for the device."""
+        pass
+
+    def get_lldp_neighbors_detail(self):
+        """Get LLDP neighbors with details for the device."""
+        pass
+
+    def get_mac_address_table(self):
+        """Get MAC address table for the device."""
+        pass
+
+    def get_network_instances(self):
+        """Get network instances for the device."""
+        pass
+
+    def get_ntp_peers(self):
+        """Get NTP peers for the device."""
+        pass
+
+    def get_ntp_servers(self):
+        """Get NTP servers for the device."""
+        pass
+
+    def get_ntp_stats(self):
+        """Get NTP statistics for the device."""
+        pass
+
+    def get_optics(self):
+        """Get optical transceiver state and statistics for the device."""
+        pass
+
+    def get_probes_config(self):
+        """Get network probes config for the device."""
+        pass
+
+    def get_probes_results(self):
+        """Get network probs statistics for the device."""
+        pass
+
+    def get_route_to(self):
+        """Get route for the device."""
+        pass
+
+    def get_snmp_information(self):
+        """Get SNMP information for the device."""
+        pass
+
+    def get_users(self):
+        """Get users for the device."""
+        pass
+
+    def is_alive(self):
+        """Get connection alive status for the device."""
+        if self.device is None:
+            return {"is_alive": False}
+        try:
+            # Try sending ASCII null byte to maintain the SSH connection alive
+            null = chr(0)
+            self.device.write_channel(null)
+            return {"is_alive": self.device.remote_conn.transport.is_active()}
+        except (socket.error, EOFError, OSError, AttributeError):
+            # If unable to send, we can tell for sure that the connection is unusable
+            return {"is_alive": False}
+
+    def ping(self):
+        """Execute ping from the device."""
+        pass
+
+    def traceroute(self):
+        """Execute traceroute from the device."""
+        pass
