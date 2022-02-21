@@ -21,6 +21,7 @@ Read https://napalm.readthedocs.io for more information.
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import ipaddress
 import socket
 
 from netmiko import ConnectHandler
@@ -210,6 +211,51 @@ class FortinetDriver(NetworkDriver):
 
     def get_interfaces_ip(self):
         """Get interface IP addresses for the device."""
+        ip_addr_list = self._send_command("diagnose ip address list")
+        ipv6_addr_list = self._send_command("diagnose ipv6 address list")
+
+        intfs_ip = {}
+
+        for line in ip_addr_list.splitlines():
+            ipv4_vals = line.split(" ")
+
+            intf_name = ipv4_vals[2].split("=")[1]
+            if intf_name not in intfs_ip:
+                intfs_ip[intf_name] = {}
+
+            if "ipv4" not in intfs_ip[intf_name]:
+                intfs_ip[intf_name]["ipv4"] = {}
+
+            ipv4_addr_cidr = ipv4_vals[0].split("->")[1]
+            ipv4_network = ipaddress.IPv4Interface(ipv4_addr_cidr)
+
+            ipv4_addr = str(ipv4_network.ip)
+            ipv4_prefix = int(ipv4_network.network.prefixlen)
+
+            intfs_ip[intf_name]["ipv4"][ipv4_addr] = {}
+            intfs_ip[intf_name]["ipv4"][ipv4_addr]["prefix_length"] = ipv4_prefix
+
+        for line in ipv6_addr_list.splitlines():
+            ipv6_vals = line.split(" ")
+
+            intf_name = ipv6_vals[1].split("=")[1]
+            if intf_name not in intfs_ip:
+                intfs_ip[intf_name] = {}
+
+            if "ipv6" not in intfs_ip[intf_name]:
+                intfs_ip[intf_name]["ipv6"] = {}
+
+            print(ipv6_vals[5])
+            print(ipv6_vals[4])
+
+            ipv6_addr = str(ipv6_vals[5].split("=")[1])
+            ipv6_prefix = int(ipv6_vals[4].split("=")[1])
+
+            intfs_ip[intf_name]["ipv6"][ipv6_addr] = {}
+            intfs_ip[intf_name]["ipv6"][ipv6_addr]["prefix_length"] = ipv6_prefix
+
+        print(intfs_ip)
+
         pass
 
     def get_ipv6_neighbors_table(self):

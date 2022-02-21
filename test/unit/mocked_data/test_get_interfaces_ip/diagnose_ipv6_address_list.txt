@@ -1,0 +1,5 @@
+dev=11 devname=internal4 flag=P scope=0 prefix=64 addr=3b01:4200:ffff:ffff:: preferred=4294967295 valid=4294967295 cstamp=7314712 tstamp=7314712
+dev=11 devname=internal4 flag=P scope=253 prefix=64 addr=fe80::ea1c:baff:fe6b:a05e preferred=4294967295 valid=4294967295 cstamp=7314712 tstamp=7314712
+dev=18 devname=root flag=P scope=254 prefix=128 addr=::1 preferred=4294967295 valid=4294967295 cstamp=4416 tstamp=4416
+dev=32 devname=vsys_ha flag=P scope=254 prefix=128 addr=::1 preferred=4294967295 valid=4294967295 cstamp=12994 tstamp=12994
+dev=34 devname=vsys_fgfm flag=P scope=254 prefix=128 addr=::1 preferred=4294967295 valid=4294967295 cstamp=13851 tstamp=13851
