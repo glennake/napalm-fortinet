@@ -1,4 +1,4 @@
-# napalm-procurve
+# napalm-fortinet
 
 [NAPALM](https://napalm-automation.net/) driver for Fortinet networking
 equipment.
@@ -34,7 +34,7 @@ $ pip install git+https://github.com/glennake/napalm-fortinet.git
 Test functionality:
 ```
 #!/usr/bin/env python3
-# Simple napalm-procurve test
+# Simple napalm-fortinet test
 
 import json
 from napalm import get_network_driver
