@@ -140,6 +140,7 @@ class FortinetDriver(NetworkDriver):
         sys_perf_uptime = self._send_command(
             "get system performance status | grep Uptime"
         )
+        sys_dns_domain = self._send_command("get system dns | grep domain")
 
         uptime_formatted = (
             sys_perf_uptime.replace("Uptime:", "")
@@ -164,6 +165,12 @@ class FortinetDriver(NetworkDriver):
                 serial_number = line.split(" ")[1]
             if "Hostname: " in line:
                 hostname = line.split(" ")[1]
+
+        domain = sys_dns_domain.split(":")
+        if len(domain) > 1 and domain[1]:
+            fqdn = hostname + "." + domain
+        else:
+            fqdn = hostname
 
         facts = {
             "os_version": os_version,
