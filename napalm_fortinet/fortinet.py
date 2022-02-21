@@ -118,7 +118,7 @@ class FortinetDriver(NetworkDriver):
             null = chr(0)
             self.device.write_channel(null)
             return {"is_alive": self.device.remote_conn.transport.is_active()}
-        except (socket.error, EOFError, OSError):
+        except (socket.error, EOFError, OSError, AttributeError):
             # If unable to send, we can tell for sure that the connection is unusable
             return {"is_alive": False}
 
