@@ -20,7 +20,7 @@ import pkg_resources
 from napalm_fortinet.fortinet import FortinetDriver  # noqa
 
 try:
-    __version__ = pkg_resources.get_distribution("napalm-nxos-ssh").version
+    __version__ = pkg_resources.get_distribution("napalm-fortinet").version
 except pkg_resources.DistributionNotFound:
     __version__ = "Not installed"
 

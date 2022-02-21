@@ -95,4 +95,5 @@ class FortinetDriver(NetworkDriver):
 
     def get_facts(self):
         """Get facts for the device."""
-        pass
+        facts = {}
+        return facts
