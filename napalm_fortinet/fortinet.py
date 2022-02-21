@@ -130,7 +130,7 @@ class FortinetDriver(NetworkDriver):
             if "Version: " in line:
                 line_val = line.split(": ")[1].strip().split(" ")[0].strip()
                 model = line_val[0].strip()
-                sw_ver = line_val.split(",")[0].strip().string.lstrip("v")
+                sw_ver = line_val.split(",")[0].strip().lstrip("v")
 
         facts = {
             "vendor": "Fortinet",
