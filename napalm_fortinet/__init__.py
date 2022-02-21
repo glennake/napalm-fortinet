@@ -13,6 +13,15 @@
 # the License.
 
 """napalm-fortinet package."""
+
+# Import stdlib
+import pkg_resources
+
 from napalm_fortinet.fortinet import FortinetDriver  # noqa
+
+try:
+    __version__ = pkg_resources.get_distribution("napalm-nxos-ssh").version
+except pkg_resources.DistributionNotFound:
+    __version__ = "Not installed"
 
 __all__ = ("FortinetDriver",)
