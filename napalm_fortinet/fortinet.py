@@ -245,9 +245,6 @@ class FortinetDriver(NetworkDriver):
             if "ipv6" not in intfs_ip[intf_name]:
                 intfs_ip[intf_name]["ipv6"] = {}
 
-            print(ipv6_vals[5])
-            print(ipv6_vals[4])
-
             ipv6_addr = str(ipv6_vals[5].split("=")[1])
             ipv6_prefix = int(ipv6_vals[4].split("=")[1])
 
