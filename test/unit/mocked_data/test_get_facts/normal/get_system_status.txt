@@ -1,0 +1,24 @@
+Version: FortiGate-60E v6.4.8,build1914,211117 (GA)
+Virus-DB: 89.09825(2022-02-21 05:20)
+Extended DB: 89.09825(2022-02-21 05:19)
+IPS-DB: 20.00262(2022-02-17 01:59)
+IPS-ETDB: 0.00000(2001-01-01 00:00)
+APP-DB: 20.00262(2022-02-17 01:59)
+INDUSTRIAL-DB: 6.00741(2015-12-01 02:30)
+Serial-Number: FGT60ETK12345ABC
+IPS Malicious URL Database: 3.00273(2022-02-20 15:46)
+BIOS version: 05000012
+System Part-Number: P18816-03
+Log hard disk: Not available
+Hostname: my-fortigate-01
+Private Encryption: Disable
+Operation Mode: NAT
+Current virtual domain: root
+Max number of virtual domains: 10
+Virtual domains status: 1 in NAT mode, 0 in TP mode
+Virtual domain configuration: disable
+FIPS-CC mode: disable
+Current HA mode: standalone
+Branch point: 1914
+Release Version Information: GA
+System time: Mon Feb 21 15:26:33 2022

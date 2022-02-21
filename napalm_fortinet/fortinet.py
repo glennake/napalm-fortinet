@@ -124,24 +124,56 @@ class FortinetDriver(NetworkDriver):
 
     def get_facts(self):
         """Get facts for the device."""
-        system_status = self._send_command("get system status")
+        # Default values
+        vendor = "Fortinet"
+        uptime = -1
+        (serial_number, fqdn, os_version, hostname, model, interface_list) = (
+            "Unknown",
+            "Unknown",
+            "Unknown",
+            "Unknown",
+            "Unknown",
+            [],
+        )
 
-        for line in system_status.splitlines():
+        sys_status = self._send_command("get system status")
+        sys_perf_uptime = self._send_command(
+            "get system performance status | grep Uptime"
+        )
+
+        uptime_formatted = (
+            sys_perf_uptime.replace("Uptime:", "")
+            .replace(" days,  ", ":")
+            .replace(" hours,  ", ":")
+            .replace(" minutes", ":")
+            .strip()
+        )
+        uptime_dict = dict(zip(("d", "h", "m"), uptime_formatted.split(":")))
+        uptime_seconds = (
+            +int(uptime_dict["m"]) * 60
+            + int(uptime_dict["h"]) * 60 * 60
+            + int(uptime_dict["d"]) * 60 * 60 * 24
+        )
+
+        for line in sys_status.splitlines():
             if "Version: " in line:
-                line_val = line.split(": ")[1].strip().split(" ")[0].strip()
-                model = line_val[0].strip()
-                sw_ver = line_val.split(",")[0].strip().lstrip("v")
+                line_vals = line.split(": ")[1].split(" ")
+                model = line_vals[0]
+                os_version = line_vals[1].split(",")[0].lstrip("v")
+            if "Serial-Number: " in line:
+                serial_number = line.split(" ")[1]
+            if "Hostname: " in line:
+                hostname = line.split(" ")[1]
 
         facts = {
-            "vendor": "Fortinet",
+            "os_version": os_version,
+            "uptime": uptime_seconds,
+            "interface_list": [],
+            "vendor": vendor,
+            "serial_number": serial_number,
             "model": model,
-            "serial": "",
-            "sw_ver": sw_ver,
-            "hostname": "",
-            "ha_mode": "",
-            "vdom_mode": "",
-            "op_mode": "",
-            "branch_pt": "",
+            "hostname": hostname,
+            "fqdn": fqdn,
         }
 
         return facts

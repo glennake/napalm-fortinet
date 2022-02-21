@@ -1,0 +1,10 @@
+{
+	"os_version": "6.4.8",
+	"uptime": 6499680,
+	"interface_list": ["dmz", "internal1", "internal2", "internal3", "internal4", "internal5", "internal6", "internal7", "modem", "ssl.root", "wan1", "wan2"],
+	"vendor": "Fortinet",
+	"serial_number": "FGT60ETK12345ABC",
+	"model": "FortiGate-60E",
+	"hostname": "my-fortigate-01",
+	"fqdn": "Unknown"
+}
