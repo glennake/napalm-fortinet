@@ -23,7 +23,11 @@ Read https://napalm.readthedocs.io for more information.
 
 from netmiko import ConnectHandler
 
-from napalm.base import NetworkDriver
+try:
+    from napalm.base.base import NetworkDriver
+except ImportError:
+    from napalm_base.base import NetworkDriver
+
 from napalm.base.exceptions import (
     ConnectionException,
     SessionLockedException,
@@ -88,3 +92,7 @@ class FortinetDriver(NetworkDriver):
     def close(self):
         """Close connection to the device."""
         self.device.disconnect()
+
+    def get_facts(self):
+        """Get facts for the device."""
+        pass
