@@ -36,6 +36,7 @@ from napalm.base.exceptions import (
     ReplaceConfigException,
     CommandErrorException,
 )
+from paramiko import AgentKey
 
 
 class FortinetDriver(NetworkDriver):
@@ -114,12 +115,19 @@ class FortinetDriver(NetworkDriver):
         """Get arp table for the device."""
         sys_arp = self._send_command("get system arp")
 
-        arp = {}
+        arps = []
 
         for line in sys_arp.splitlines()[1:]:
-            print(line)
+            line_vals = line.split()
+            arp_entry = {
+                "age": float(line_vals[1]),
+                "interface": str(line_vals[3]),
+                "ip": str(line_vals[0]),
+                "mac": str(line_vals[2]),
+            }
+            arps.append(arp_entry)
 
-        return arp
+        return arps
 
     def get_bgp_config(self):
         """Get bgp config for the device."""
