@@ -112,7 +112,14 @@ class FortinetDriver(NetworkDriver):
 
     def get_arp_table(self):
         """Get arp table for the device."""
-        pass
+        sys_arp = self._send_command("get system arp")
+
+        arp = {}
+
+        for line in sys_arp.splitlines()[1:]:
+            print(line)
+
+        return arp
 
     def get_bgp_config(self):
         """Get bgp config for the device."""

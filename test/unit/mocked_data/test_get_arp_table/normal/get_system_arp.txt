@@ -1,0 +1,7 @@
+Address           Age(min)   Hardware Addr      Interface
+1.2.3.2           0          d8:2d:bc:6f:1b:b4 internal1
+1.2.3.1           0          e9:4c:bd:6b:4b:01 internal1
+192.168.2.4       0          e8:1c:ba:7f:1c:d4 internal2
+1.2.3.3           0          64:87:88:af:51:8d internal1
+192.168.2.7       0          c4:6c:cd:6b:4b:02 internal2
+192.168.2.8       0          10:0d:4a:d6:f3:49 internal2
