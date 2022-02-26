@@ -18,7 +18,7 @@ Please open a GitHub issue if you find an problems.
 | get_bgp_config            |  ❌      |
 | get_bgp_neighbors         |  ❌      |
 | get_bgp_neighbors_detail  |  ❌      |
-| get_config                |  ❌      |
+| get_config                |  ✅      |
 | get_environment           |  ❌      |
 | get_facts                 |  ✅      |
 | get_firewall_policies     |  ❌      |

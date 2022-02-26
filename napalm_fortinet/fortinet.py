@@ -22,6 +22,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import ipaddress
+import re
 import socket
 
 from netmiko import ConnectHandler
@@ -129,9 +130,72 @@ class FortinetDriver(NetworkDriver):
 
         return arps
 
-    def get_bgp_config(self):
-        """Get bgp config for the device."""
-        pass
+    def get_bgp_config(self, group="", neighbor=""):
+        """Get bgp config for the device.
+            :param group='':
+            :param neighbor='':
+        """
+
+        bgp_config = {}
+        bgp_config["_"] = {
+            "apply_groups": [],
+            "description": "",
+            "export_policy": "",
+            "import_policy": "",
+            "local_address": "",
+            "local_as": 0,
+            "multihop_ttl": 0,
+            "multipath": False,
+            "neighbors": {},
+            "prefix_limit": {
+                "inet": {
+                    "unicast": {"limit": 0, "teardown": {"threshold": 0, "timeout": 0},}
+                }
+            },
+            "remote_as": 0,
+            "remove_private_as": False,
+            "type": "",
+        }
+
+        show_router_bgp = self._send_command("show full-configuration router bgp")
+
+        re_neighbors = re.search(
+            "^    config neighbor\n(?:.*?)\n    end$",
+            show_router_bgp,
+            re.MULTILINE | re.DOTALL,
+        )
+
+        neighbors = re_neighbors.group(0).strip()
+
+        for n in re.finditer(
+            '^        edit "?(.*?)"?\n(?:.*?)?\n?        next$',
+            neighbors,
+            re.MULTILINE | re.DOTALL,
+        ):
+
+            neighbor_ip = n.group(1)
+
+            bgp_config["_"]["neighbors"][neighbor_ip] = {
+                "authentication_key": "",
+                "description": "",
+                "export_policy": "",
+                "import_policy": "",
+                "local_address": "",
+                "local_as": 0,
+                "nhs": False,
+                "prefix_limit": {
+                    "inet": {
+                        "unicast": {
+                            "limit": 0,
+                            "teardown": {"threshold": 0, "timeout": 0},
+                        }
+                    }
+                },
+                "remote_as": 0,
+                "route_reflector_client": False,
+            }
+
+        return bgp_config
 
     def get_bgp_neighbors(self):
         """Get bgp neighbors for the device."""
@@ -141,9 +205,26 @@ class FortinetDriver(NetworkDriver):
         """Get bgp neighbors with details for the device."""
         pass
 
-    def get_config(self):
-        """Get config for the device."""
-        pass
+    def get_config(self, retrieve="all"):
+        """Get config for the device.
+            :param retrieve='':
+        """
+        show_config = self._send_command("show")
+
+        configs = {
+            "candidate": "",
+            "running": "",
+            "startup": "",
+        }
+
+        if retrieve in ["candidate", "all"]:
+            configs["candidate"] = ""
+        if retrieve in ["running", "all"]:
+            configs["running"] = show_config
+        if retrieve in ["startup", "all"]:
+            configs["startup"] = show_config
+
+        return configs
 
     def get_environment(self):
         """Get environmentals for the device."""
