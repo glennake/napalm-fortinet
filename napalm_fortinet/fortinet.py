@@ -135,29 +135,36 @@ class FortinetDriver(NetworkDriver):
             :param group='':
             :param neighbor='':
         """
+        show_router_bgp = self._send_command("show full-configuration router bgp")
 
-        bgp_config = {}
-        bgp_config["_"] = {
-            "apply_groups": [],
-            "description": "",
-            "export_policy": "",
-            "import_policy": "",
-            "local_address": "",
-            "local_as": 0,
-            "multihop_ttl": 0,
-            "multipath": False,
-            "neighbors": {},
-            "prefix_limit": {
-                "inet": {
-                    "unicast": {"limit": 0, "teardown": {"threshold": 0, "timeout": 0},}
-                }
-            },
-            "remote_as": 0,
-            "remove_private_as": False,
-            "type": "",
+        bgp_config = {
+            "_": {
+                "apply_groups": [],
+                "description": "",
+                "export_policy": "",
+                "import_policy": "",
+                "local_address": "",
+                "local_as": 0,
+                "multihop_ttl": 0,
+                "multipath": False,
+                "neighbors": {},
+                "prefix_limit": {
+                    "inet": {
+                        "unicast": {
+                            "limit": 0,
+                            "teardown": {"threshold": 0, "timeout": 0},
+                        }
+                    }
+                },
+                "remote_as": 0,
+                "remove_private_as": False,
+                "type": "",
+            }
         }
 
-        show_router_bgp = self._send_command("show full-configuration router bgp")
+        bgp_config["_"]["local_as"] = int(
+            re.search("    set as ([0-9]{1,10})\n", show_router_bgp).group(1)
+        )
 
         re_neighbors = re.search(
             "^    config neighbor\n(?:.*?)\n    end$",
