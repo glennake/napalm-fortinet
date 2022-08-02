@@ -157,7 +157,7 @@ class FortinetDriver(NetworkDriver):
                     }
                 },
                 "remote_as": 0,
-                "remove_private_as": False,
+                "remove_private_as": False,  # With FortiOS this is set under individual neighbors
                 "type": "",
             }
         }
@@ -165,6 +165,11 @@ class FortinetDriver(NetworkDriver):
         bgp_config["_"]["local_as"] = int(
             re.search("    set as ([0-9]{1,10})\n", show_router_bgp).group(1)
         )
+
+        # if re.search("    set remove-private-as enable", show_router_bgp):
+        #     bgp_config["_"]["remove_private_as"] = True
+
+        # process neighbors
 
         re_neighbors = re.search(
             "^    config neighbor\n(?:.*?)\n    end$",
@@ -174,21 +179,28 @@ class FortinetDriver(NetworkDriver):
 
         neighbors = re_neighbors.group(0).strip()
 
-        for n in re.finditer(
+        for re_n in re.finditer(
             '^        edit "?(.*?)"?\n(?:.*?)?\n?        next$',
             neighbors,
             re.MULTILINE | re.DOTALL,
         ):
 
-            neighbor_ip = n.group(1)
+            n = re_n.group(0)
+            n_ip = re_n.group(1)
 
-            bgp_config["_"]["neighbors"][neighbor_ip] = {
+            n_description = re.search('set description "(.*?)"\n', n).group(1)
+            n_export_policy = re.search('set route-map-out "(.*?)"\n', n).group(1)
+            n_import_policy = re.search('set route-map-oinut "(.*?)"\n', n).group(1)
+            n_local_as = int(re.search("set local-as ([0-9]{1,10})\n", n).group(1))
+            n_remote_as = int(re.search("set remote-as ([0-9]{1,10})\n", n).group(1))
+
+            bgp_config["_"]["neighbors"][n_ip] = {
                 "authentication_key": "",
-                "description": "",
-                "export_policy": "",
-                "import_policy": "",
+                "description": n_description,
+                "export_policy": n_export_policy,
+                "import_policy": n_import_policy,
                 "local_address": "",
-                "local_as": 0,
+                "local_as": n_local_as,
                 "nhs": False,
                 "prefix_limit": {
                     "inet": {
@@ -198,7 +210,7 @@ class FortinetDriver(NetworkDriver):
                         }
                     }
                 },
-                "remote_as": 0,
+                "remote_as": n_remote_as,
                 "route_reflector_client": False,
             }
 
