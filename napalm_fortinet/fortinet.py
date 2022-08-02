@@ -87,10 +87,16 @@ class FortinetDriver(NetworkDriver):
 
     def open(self):
         """Open connection to the device."""
-        device_type = "fortinet_ssh"
-        self.device = self._netmiko_open(
-            device_type, netmiko_optional_args=self.netmiko_optional_args
-        )
+        try:
+            self.device = ConnectHandler(
+                device_type="fortinet_ssh",
+                ip=self.hostname,
+                username=self.username,
+                password=self.password,
+                **self.netmiko_optional_args,
+            )
+        except ConnectionException as e:
+            raise ConnectionException(str(e))
 
     def close(self):
         """Close connection to the device."""
